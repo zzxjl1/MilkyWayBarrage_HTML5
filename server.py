@@ -17,10 +17,10 @@ def KEY():
 import redis
 redisdic={10:"userdic",11:"devicedic",12:"userlist",13:"roomdic"}
 
-redis.ConnectionPool(host='localhost', port=6379, password='wfkycEzzxjl1',decode_responses=True)
+redis.ConnectionPool(host='localhost', port=6379, password='******',decode_responses=True)
 
 for key,value in redisdic.items():
-   exec(value+"""= redis.Redis(connection_pool=redis.ConnectionPool(host='localhost', port=6379, password='wfkycEzzxjl1',decode_responses=True,db="""+str(key)+"""))
+   exec(value+"""= redis.Redis(connection_pool=redis.ConnectionPool(host='localhost', port=6379, password='******',decode_responses=True,db="""+str(key)+"""))
 """+value+""".flushdb() 
 """+value+""".hmset("startuptest", {"test": "redis内存数据库启动！msg from:  """+value+""""})
 print("""+value+""".hget("startuptest", "test"))

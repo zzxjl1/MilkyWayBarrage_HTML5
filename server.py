@@ -422,7 +422,7 @@ if __name__ == '__main__':
     print("warning：启动方式错误！！！！！！！！！！！！！！！！！！！！！")
     print("warning：启动方式错误！！！！！！！！！！！！！！！！！！！！！")
     print("warning：启动方式错误！！！！！！！！！！！！！！！！！！！！！")
-    print("使用： gunicorn3 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker website:app -b 0.0.0.0:6000")              
+    print("使用： gunicorn3 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker server:app -b 0.0.0.0:6000")              
     os._exit(0)
     print("warning：启动方式错误")        
     

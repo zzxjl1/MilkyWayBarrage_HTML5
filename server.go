@@ -1048,7 +1048,7 @@ var addr = flag.String("addr", "localhost:6000", "http service address")
 var upgrader = websocket.Upgrader{}
 
 var redisAddr = "localhost:6379"
-var redisPassword = "wfkycEzzxjl1"
+var redisPassword = "*********"
 var userdic = redis.NewClient(&redis.Options{Addr: redisAddr, Password: redisPassword, DB: 10})
 var devicedic = redis.NewClient(&redis.Options{Addr: redisAddr, Password: redisPassword, DB: 11})
 var userlist = redis.NewClient(&redis.Options{Addr: redisAddr, Password: redisPassword, DB: 12})

@@ -1,0 +1,538 @@
+
+  
+  <!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdn.bootcss.com/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script> 
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script src="https://cdn.staticfile.org/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+<script src="/base64.js"></script>
+
+</head>
+<style>
+::-webkit-scrollbar {display: none;}
+[v-cloak] {
+    display: none;
+}
+.v-color-picker__canvas-dot{display: none;}
+</style>
+<body>
+	
+
+	
+
+    
+    <div class="container">
+
+
+ <div id="app" v-cloak>
+  <v-app id="inspire">
+<v-container fluid>
+	
+
+	    <v-btn style="margin-bottom:20px" @click="back"  color="orange darken-2" dark>
+        <v-icon dark left>mdi-arrow-left</v-icon>Back
+      </v-btn>
+
+     
+
+      
+<!--	      
+<section class="hero">
+  <div class="hero-body">
+    <div class="container">
+      
+      <h1 class="title">
+       mk弹幕 DEMO
+      </h1>
+      <h2 class="subtitle">
+      Milky Way Barrage Founder Edition  MKMKMK~~~ 
+      </h2>
+      
+
+    </div>
+  </div>
+</section>
+-->	      
+	      
+	      
+	   	<v-expansion-panels focusable>
+ <v-expansion-panel>
+        <v-expansion-panel-header id="share">邀请别人加入</v-expansion-panel-header>
+        <v-expansion-panel-content>
+   <img id="qrcode" style="width: 15rem;"/>
+   <br>
+   <v-btn rounded color="success" style="margin-top: 10px;margin-right:5px" onclick="copyUrl()" dark>复制链接</v-btn>
+   <v-btn rounded color="primary" style="margin-top: 10px" onclick="sharetoqfriend()" dark>一键分享到QQ</v-btn>
+
+        </v-expansion-panel-content>
+      </v-expansion-panel>	
+   </v-expansion-panels>
+    
+            
+            
+
+
+ <br>
+ 
+ 
+	
+	<v-expansion-panels focusable>
+ <v-expansion-panel>
+        <v-expansion-panel-header>UI设置</v-expansion-panel-header>
+        <v-expansion-panel-content>
+                <div style="margin: 10px">
+    <v-switch v-model="fpsswitch" hide-details label="显示帧率"></v-switch>
+    <v-switch v-model="tipsswitch" hide-details label="显示小贴士"></v-switch>
+    <v-switch v-model="npswitch" hide-details label="显示序号"></v-switch>
+    <v-switch v-if="not_safari" v-model="fsbtnswitch" hide-details label="显示全屏按钮"></v-switch>
+    </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>	
+   </v-expansion-panels>
+
+
+<br>
+
+    <v-card>
+      <v-toolbar flat dense>
+        <v-toolbar-title>
+          <span class="subheading">滚动速度</span>
+        </v-toolbar-title>
+      </v-toolbar>
+  
+      <v-card-text>
+        <v-row class="mb-4" justify="space-between">
+          <v-col class="text-left">
+            <span class="display-3 font-weight-light" v-text="bpm"></span>
+            <span class="subheading font-weight-light mr-1">像素/帧</span>
+          </v-col>
+        </v-row>
+  
+        <v-slider
+          v-model="bpm"
+          :color="color"
+           :rules="speedrule"
+          track-color="grey"
+          always-dirty
+          min="-20"
+          max="20"
+        >
+          <template v-slot:prepend>
+            <v-icon :color="color" @click="decrement">mdi-minus
+            </v-icon>
+          </template>
+  
+          <template v-slot:append>
+            <v-icon :color="color" @click="increment">mdi-plus</v-icon>
+          </template>
+        </v-slider>
+      </v-card-text>
+    </v-card>
+
+<br>
+
+      <v-card>
+<v-toolbar flat dense>
+        <v-toolbar-title>
+          <span class="subheading">滚动方向</span>
+        </v-toolbar-title>
+        </v-toolbar>
+        <v-radio-group v-model="effect" style="margin: 20px">
+        <v-radio value="normal">
+          <template v-slot:label>
+            <div><strong class="success--text">正常</strong></div>
+          </template>
+        </v-radio>
+        <v-radio value="bounce">
+          <template v-slot:label>
+            <div><strong class="primary--text">跑马灯</strong></div>
+          </template>
+        </v-radio>
+      </v-radio-group>
+      </v-card>
+
+
+<br>
+
+    <v-card>
+    <v-toolbar flat dense>
+    <v-toolbar-title>
+          <span class="subheading">文字设置</span>
+        </v-toolbar-title>
+        </v-toolbar>
+            <v-text-field
+              v-model="dmtext" style="margin: 20px"
+            ></v-text-field>
+           </v-card>
+
+
+ <br>
+
+    <v-card>
+    <v-toolbar flat dense>
+    <v-toolbar-title>
+          <span class="subheading">文字大小</span>
+        </v-toolbar-title>
+        </v-toolbar>
+        <br>
+            <v-slider
+          v-model="fontsize"
+          thumb-label="always"
+          style="margin:20px"
+          min="10"
+        ></v-slider>
+           </v-card>
+
+
+
+ <br>
+
+    <v-card>
+    <v-toolbar flat dense>
+    <v-toolbar-title>
+          <span class="subheading">文字颜色</span> <v-btn onclick="vue.textcolor=randomcolor()" small>随机</v-btn>   
+        </v-toolbar-title>
+        </v-toolbar>
+
+        <v-tabs v-model="tab">
+         <v-tab>单色</v-tab>
+         <v-tab>渐变</v-tab>
+      </v-tabs>
+  
+      <v-tabs-items v-model="tab">
+        <v-tab-item>
+        	<!--<botton class="color-picker"></botton>-->
+      <v-color-picker
+      v-model="textcolor"
+      :hide-inputs=true
+      :show-swatches=false
+    ></v-color-picker>
+        </v-tab-item>
+        <v-tab-item>
+开发中...
+        	
+        	</v-tab-item>    
+      </v-tabs-items>
+
+           </v-card>
+
+
+
+
+<br>
+
+    <v-card>
+    <v-toolbar flat dense>
+    <v-toolbar-title>
+        <span class="subheading">背景颜色</span> <v-btn onclick="vue.bgcolor=randomcolor()" small>随机</v-btn> 
+        </v-toolbar-title>
+        </v-toolbar>
+
+        <v-tabs v-model="tab2">
+         <v-tab>单色</v-tab>
+         <v-tab>图片</v-tab>
+         <v-tab>闪烁</v-tab>
+      </v-tabs>
+  
+      <v-tabs-items v-model="tab2">
+        <v-tab-item>   
+        <v-color-picker
+      v-model="bgcolor"
+      :hide-inputs=true
+      :show-swatches=false
+    ></v-color-picker></v-tab-item>
+        <v-tab-item>
+        	
+        	开发中...
+        </v-tab-item> 
+        <v-tab-item>
+        	
+
+         <v-select
+          :items="bgblinkitems"
+          label="速度"
+          v-model="bgblinkinterval"
+          solo
+          style="margin: 20px"
+        ></v-select>
+        
+        </v-tab-item>
+      </v-tabs-items>
+
+           </v-card>
+           
+ 
+ <br>
+
+    <v-card>
+    <v-toolbar flat dense>
+    <v-toolbar-title>
+          <span class="subheading">背景音乐BGM</span>
+        </v-toolbar-title>
+        </v-toolbar>
+            
+           </v-card>
+            
+<br>
+
+    <v-card>
+    <v-toolbar flat dense>
+    <v-toolbar-title>
+          <span class="subheading">预设Preset</span>
+        </v-toolbar-title>
+        </v-toolbar>
+            
+           </v-card>
+           
+           
+<br>
+
+  <v-alert prominent type="error">
+      <v-row align="center">
+        <v-col class="grow">请仅在了解的情况下更改以下设置,否则可能严重影响体验</v-col>
+      </v-row>
+    </v-alert>
+    
+<v-checkbox v-model="allowresync" hide-details label="服务端检测到不同步时尝试调整"></v-checkbox>
+<v-checkbox disabled v-model="autocompensate" hide-details label="丢帧时保证滚动同步"></v-checkbox>
+
+<br>
+<v-btn block color="secondary" dark onclick="back()">返回主界面</v-btn>
+
+</v-container>
+  </v-app>
+</div>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script src="https://cdn.staticfile.org/platform/1.3.5/platform.min.js"></script>
+  <script>
+  
+  function randomcolor(){//十六进制颜色随机
+			var r = Math.floor(Math.random()*256);
+			var g = Math.floor(Math.random()*256);
+			var b = Math.floor(Math.random()*256);
+			var color = '#'+r.toString(16)+g.toString(16)+b.toString(16);
+			return color;
+		}
+		
+
+
+  
+  $("#qrcode").attr('src',"/qr?data="+parent.location.href.replace("&","!"));
+  
+  var sendthrottle;
+   var vue= new Vue({
+  el: '#app',
+  vuetify: new Vuetify(),
+  data: () => ({
+    bpm: 1,
+    tab: null,
+    tab2: null,
+    dmtext:"测试",
+    effect:"bounce",
+    fontsize: 20,
+    textcolor:"#006400",
+    bgcolor:"#FFFFFF",
+    allowresync:true,
+    autocompensate:true,
+    speedrule:[
+          v => v != 0 || '设置无效,不能为0',
+        ],
+    fpsswitch:parent.$("#fpscontainer").is(":visible"),
+    tipsswitch:parent.$("#tipscontainer").is(":visible"),
+    npswitch:parent.$("#numberplatecontainer").is(":visible"),
+    fsbtnswitch:parent.$("#fullscreen-toggler").is(":visible"),
+    not_safari:platform.name!="Safari",
+    bgblinkitems: ['关闭','极快(200ms)', '快(500ms)', '正常(1000ms)', '慢(2000ms)'],
+    bgblinkinterval:null,
+  }),
+
+  computed: {
+    color () {
+      if (Math.abs(this.bpm) < 5) return 'indigo'
+      if (Math.abs(this.bpm) < 10) return 'teal'
+      if (Math.abs(this.bpm) < 15) return 'green'
+      return 'red'
+    },
+
+  },
+
+  methods: {
+    decrement () {
+      this.bpm--
+    },
+    increment () {
+      this.bpm++
+    },
+    back(){
+    parent.back()
+    }
+  },
+  watch: {
+      bpm(val) {
+      	    if(vue.bpm==0)return;
+            throttle(function(){$.get("/api/setspeed?speed="+vue.bpm+"&roomid="+parent.roomid, function(result){});});
+      },
+       dmtext(val) {
+       	    throttle(function(){$.get("/api/settext?text="+vue.dmtext+"&roomid="+parent.roomid, function(result){});},500); 
+      },
+       fontsize(val) {
+       		throttle(function(){ $.get("/api/settextsize?size="+parent.app.renderer.height*vue.fontsize/100+"&roomid="+parent.roomid, function(result){});});
+      },
+      effect(val){
+         	throttle(function(){$.get("/api/seteffect?effect="+vue.effect+"&roomid="+parent.roomid, function(result){});}); 
+      },
+      textcolor(val){
+      	    throttle(function(){$.get("/api/settextcolor?color="+vue.textcolor.replace("#","@")+"&roomid="+parent.roomid, function(result){});}); 
+      },
+      bgcolor(val){
+      	    throttle(function(){$.get("/api/setbackgroundcolor?color="+vue.bgcolor.replace("#","@")+"&roomid="+parent.roomid, function(result){});}); 
+      },
+      fpsswitch(val){
+      	  if(!vue.fpsswitch){parent.$("#fpscontainer").hide();window.localStorage.setItem("fps", "hidden");}
+      	  else {parent.$("#fpscontainer").show();window.localStorage.removeItem("fps");}
+      },
+      tipsswitch(val){
+      	  if(!vue.tipsswitch){parent.$("#tipscontainer").hide();window.localStorage.setItem("tips", "hidden");}
+      	  else {parent.$("#tipscontainer").show();window.localStorage.removeItem("tips");}
+      },
+      npswitch(val){
+      	  if(!vue.npswitch){parent.$("#numberplatecontainer").hide();window.localStorage.setItem("numberplate", "hidden");}
+      	  else {parent.$("#numberplatecontainer").show();window.localStorage.removeItem("numberplate");}
+      },
+      fsbtnswitch(val){
+      	  if(!vue.fsbtnswitch){parent.$("#fullscreen-toggler").hide();window.localStorage.setItem("fullscreen-toggler", "hidden");}
+      	  else {parent.$("#fullscreen-toggler").show();window.localStorage.removeItem("fullscreen-toggler");}
+      },
+      bgblinkinterval(val){
+      	  var t=[0,200,500,1000,2000];
+      	  t=t[vue.bgblinkitems.indexOf(val)];
+      	  throttle(function(){$.get("/api/setbgblinkinterval?interval="+t+"&roomid="+parent.roomid, function(result){});}); 
+      },
+      
+    },
+      mounted:function(){
+    //alert('render complete');
+    setTimeout(function(){
+    	draw();$("#share").click();
+    	console.log("ALL DONE");
+    	window.top.postMessage({'action':'canvaspannelloaded'}, window.location.protocol+"//"+window.location.host);
+    	
+    	setTimeout(function(){   
+    vue.fpsswitch=parent.$("#fpscontainer").is(":visible");
+    vue.tipsswitch=parent.$("#tipscontainer").is(":visible");
+    vue.npswitch=parent.$("#numberplatecontainer").is(":visible");
+    vue.fsbtnswitch=parent.$("#fullscreen-toggler").is(":visible");},1000);
+     refreshui();	
+    },500);
+  }
+})
+var disablewatch=false;
+function throttle(fun,delay){
+	if(disablewatch)return;
+	delay=delay||200;
+	clearTimeout(sendthrottle);
+    sendthrottle=setTimeout(function(){fun()},delay);
+}
+
+window.onresize=function(){setTimeout("draw()",500);refreshui()}
+
+function draw(){
+
+	$(".v-color-picker").css("max-width","unset");
+	$("canvas").width($(".v-window-item").width());
+	$("canvas").height($(".v-window-item").height()-$(".v-color-picker__controls").outerHeight());
+	$(".v-color-picker__canvas").css("width","unset");
+	//vue.fontsize=parent.danmutext.style.fontSize/parent.app.renderer.height*100;
+}
+
+function refreshui(){
+    	disablewatch=true;
+      $.get("/getconfig"+"?roomid="+parent.roomid, function(data){
+       	vue.bpm=data.speed;
+       	vue.effect=data.effect;
+       	vue.dmtext=data.text;
+       	vue.fontsize=data.textsize/parent.app.renderer.height *100;
+       	vue.textcolor=data.textcolor;
+       	vue.bgcolor=data.backgroundcolor;
+       	var t=[0,200,500,1000,2000];
+       	vue.bgblinkinterval=vue.bgblinkitems[t.indexOf(parseInt(data.bgblinkinterval))]
+       	setTimeout("disablewatch=false",500);
+      }); 
+      
+}
+      
+    
+  function copyUrl() {
+      var textArea = document.createElement("textarea")
+
+      textArea.style.position = 'fixed';
+      textArea.style.top = 0;
+      textArea.style.left = 0;
+      textArea.style.width = '2em';
+      textArea.style.height = '2em';
+      textArea.style.padding = 0;
+      textArea.style.border = 'none';
+      textArea.style.outline = 'none';
+      textArea.style.boxShadow = 'none';
+      textArea.style.background = 'transparent';
+      textArea.value = parent.location.href
+
+      document.body.appendChild(textArea)
+
+      textArea.select()
+
+      try {
+        if (document.execCommand('copy')) alert('成功复制链接到剪切板')
+      } catch(err) {
+        alert('复制链接到剪切板失败,请手动复制')
+      }
+
+      document.body.removeChild(textArea)
+
+    }  
+     function ispc() {
+      var userAgentInfo = navigator.userAgent;
+      var ua = navigator.userAgent.toLowerCase();
+      if(ua.match(/MicroMessenger/i)=="micromessenger") return true;//微信无法呼起qq
+      var Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
+      var flag = true;
+      for (var i = 0; i < Agents.length; i++) {
+        if (userAgentInfo.indexOf(Agents[i]) != -1) {
+          flag = false;
+          break;
+        }
+      }
+      return flag;
+    }
+ const share = {
+      title: "银河弹幕房间邀请",
+      desc: "点此进入我的房间",
+      share_url: parent.location.href
+    };
+    function sharetoqfriend() {
+      if (ispc()) {
+      	alert("此环境不支持呼起QQ");
+        copyUrl();
+        return;
+      }
+      var url_scheme = '//share/to_fri?src_type=web&version=1&file_type=news&share_id=101769330&title=' + Base64.encode(share.title) + '&thirdAppDisplayName=' + Base64.encode("银河弹幕") + '&url=' + Base64.encode(share.share_url) + '&description=' + Base64.encode(share.desc);
+      location.href = 'mqqapi:' + url_scheme;
+    }
+ 
+function back(){
+	if(window.top.location==parent.location)window.top.location.href="/";
+	else window.top.back();
+}   
+
+if(platform.name=="Safari")parent.$("#fullscreen-toggler").hide();
+  </script>
+
+</body>
+</html>

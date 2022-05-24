@@ -1,0 +1,417 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover,minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="author" content="Wu_Eden,349888274@qq.com">
+  <title>银河弹幕-多屏风暴</title>
+<script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script> 
+  <script src="https://rishabhp.github.io/bideo.js/bideo.js"></script>
+  <link href="https://cdn.bootcss.com/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+  <style>
+  .imgbkblur{
+  	filter:blur(100px);
+    -webkit-filter:blur(100px);
+  }
+   .gpu{
+-webkit-transform: translate3d(0,0,0);
+-moz-transform: translate3d(0,0,0);
+-ms-transform: translate3d(0,0,0);
+-o-transform: translate3d(0,0,0);
+transform: translate3d(0,0,0);
+   }
+    .divfullscreen{height:100vh;width:100vw;top:0;left:0}
+    * {
+      margin: 0; padding: 0;
+    }
+    a{-webkit-tap-highlight-color:rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+    outline:none;
+    background: none;
+    text-decoration: none;};
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+   ::-webkit-scrollbar {display:none}
+
+    #container {
+      overflow: hidden;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+    }
+
+    #background_video {
+      position: absolute;
+
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+
+      object-fit: cover;
+      height: 100%; width: 100%;
+    }
+
+    #video_cover {
+      position: absolute;
+
+      width: 100%; height: 100%;
+
+      background: url('https://rishabhp.github.io/bideo.js/video_cover.jpeg') no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+
+
+    @media (min-width: 768px) {
+      #video_controls {
+        display: none;
+      }
+    }
+
+    /* Demo page specific styles */
+
+    body {
+      text-align: center;
+      font-family: 'proxima-nova', Helvetica;
+      overflow: hidden;
+    }
+
+    #container {
+      height: 100%;
+    }
+
+    #overlay {
+      position: absolute;
+      top: 0; right: 0; left: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+    }
+
+    #main_content {
+      z-index: 2;
+      position: relative;
+      display: inline-block;
+text-shadow: 1px 1px 2px rgba(0,0,0,.7);
+      /* Vertical center */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #main_content h1 {
+      text-transform: uppercase;
+      font-weight: 600;
+      font-family: 'proxima-nova-condensed', Helvetica;
+      color: #fff;
+      font-size: 35px;
+    }
+
+    #main_content .sub_head {
+      color: rgba(255,255,255,0.5);
+      font-size: 18px;
+    }
+
+    #main_content .info {
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    #links {
+      margin-top: 50px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,.7);
+    }
+
+    #links a {
+      border: 2px solid rgba(255,255,255,0.20);
+      border-radius: 61px;
+      font-size: 12px;
+      color: #FFFFFF;
+      letter-spacing: 1px;
+      text-decoration: none;
+      text-transform: uppercase;
+      padding: 10px 25px;
+      display: inline-block;
+      margin: 5px;
+    }
+
+    #footer {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      text-shadow: 1px 1px 2px rgba(0,0,0,.7);
+    }
+    #footer a {
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      margin: 10px;
+      font-size: 12px;
+    }
+    #footer a:first-child {
+      float: left;
+    }
+    #footer a:last-child {
+      float: right;
+    }
+    .navbar{
+    background-color: rgba(0,0,0,.1);
+    background-color: transparent;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    }
+    .navbar-item{color:white;text-shadow: 1px 1px 2px rgba(0,0,0,.7);}
+    .douyin{
+    animation: uk-text-shadow-glitch .65s cubic-bezier(1,-2.91,0,3.79) 0s infinite normal both running;
+}
+@keyframes uk-text-shadow-glitch {
+    0% {
+        text-shadow: none
+    }
+    25% {
+        text-shadow: -2px -2px 0 #ff0048,2px 2px 0 #3234ff
+    }
+    50% {
+        text-shadow: 2px -2px 0 #ff0048,-2px 2px 0 #3234ff
+    }
+    75% {
+        text-shadow: -2px 2px 0 #ff0048,2px -2px 0 #3234ff
+    }
+    100% {
+        text-shadow: 2px 2px 0 #ff0048,-2px -2px 0 #3234ff
+    }
+}
+@keyframes uk-flicker {
+    0% {
+        opacity: 0
+    }
+    10% {
+        opacity: .6;
+        transform: scale(.8)
+    }
+    20% {
+        opacity: 0
+    }
+    40% {
+        opacity: 1
+    }
+    50% {
+        opacity: .2;
+        transform: scale(1.1)
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1)
+    }
+}
+.msgfromhim{
+                animation:mymove 1s infinite;
+                -webkit-animation:mymove 1s infinite; /*Safari and Chrome*/
+                animation-direction:alternate;/*轮流反向播放动画。*/
+                animation-timing-function: ease; /*动画的速度曲线*/
+
+            }
+            @keyframes mymove
+            {
+                0%{
+                transform: scale(1.8) rotate(-45deg);
+                   /*开始为原始大小*/
+                }
+               50%{
+               	
+               	 transform: scale(0.8) rotate(0deg);
+               }
+                100%{
+                    transform: scale(1.8) rotate(45deg);
+                   
+                }
+
+            }
+            
+            @-webkit-keyframes mymove /*Safari and Chrome*/
+            {
+               0%{
+                transform: scale(1.8) rotate(-45deg);
+                   /*开始为原始大小*/
+                }
+               50%{
+               	
+               	 transform: scale(0.8) rotate(0deg);
+               }
+                100%{
+                    transform: scale(1.8) rotate(45deg);
+                   
+                }
+            }
+
+
+  </style>
+
+
+</head>
+<body>
+
+		
+		<div id="intro" style="height:100vh">
+
+<div style="position:absolute;height: 64px;top:10px;left:20px;right:20px;Z-INDEX: 2;">
+    <a style="float:left">
+      <img src="/logo.png" style="height:64px">  
+    </a>
+
+   <p onclick="joinus()" class="douyin navbar-item" style="float:right;line-height:64px;font-size:1.5rem;font-weight:900">加入我们</p>
+
+
+</div>
+	
+
+  <div id="container">
+    <video id="background_video" x5-video-player-type="h5-page" loop muted></video>
+    <div id="video_cover"></div>
+    <div id="overlay"></div>
+
+
+    <section id="main_content">
+      <div id="head">
+       <!--   <h1 class="msgfromhim" style="font-size:50px">银河弹幕</h1>
+      <p class="sub_head">A JS library that makes it super easy to add fullscreen background videos.</p>
+        <p class="info">(Hold on! The video might take a while to load.)</p> -->
+      </div>
+
+      <div id="links" style="position: relative;top: 35vh;">
+        <a onclick="createroom()">创建我的房间</a>
+        <a onclick="enterroom()">加入已有房间</a>
+      </div>
+    </section>
+  </div>
+
+  <div id="footer">
+    <a> Made with 💙 by &nbsp; <strong>Wu_Eden</strong></a>
+
+   
+
+    <a>
+      苏ICP备19007141号
+    </a>
+    
+  </div></div>
+
+<div id="joinusdiv" style="height:100vh;overflow:hidden;display:none">
+	
+	<div id="iframeloading" class="gpu divfullscreen" style="overflow:hidden">
+		<div style="top:calc(50vh - 2.5REM);position:relative">
+			<img style="width:5REM" src="/logo.gif">
+        	<span style="DISPLAY: block">请稍后</span>
+        </div>
+		<img class="gpu imgbkblur" style="opacity: 0.4;width:100VW;HEIGHT:120VH;top:-6rem;position: relative;" src="/logo.gif">   
+		
+	</div>
+	<iframe src="" id="myiframe" class="divfullscreen" style="display:none" width='100%' height='100%' scrolling="yes" frameborder="0"></iframe>
+    <!--  <a style="position:absolute;top:0" onclick="back()">返回</a>   -->
+      
+      
+</div>
+
+
+
+  <script>
+window.addEventListener('message', function(e){
+   console.log(e);
+   d=e.data  
+   switch(d.action){
+     case 'canvaspannelloaded': $("#iframeloading").hide();$("#myiframe").show();break;
+     case '':  break;
+            }  
+}, false);
+
+(function () {
+
+  var bv = new Bideo();
+  bv.init({
+    // Video element
+    videoEl: document.querySelector('#background_video'),
+
+    // Container element
+    container: document.querySelector('body'),
+
+    // Resize
+    resize: true,
+
+    // autoplay: false,
+
+   
+    //playButton: document.querySelector('#play'),
+    //pauseButton: document.querySelector('#pause'),
+
+    // Array of objects containing the src and type
+    // of different video formats to add
+    src: [
+      {
+        src: 'https://s3.pstatp.com/aweme/resource/web/static/image/index/tvc-v3_4138031.mp4',
+        type: 'video/mp4'
+      },
+
+    ],
+
+    // What to do once video loads (initial frame)
+    onLoad: function () {
+      document.querySelector('#video_cover').style.display = 'none';
+    }
+  });
+}());
+
+function activite(){
+	$("#iframeloading").show();
+	$("#joinusdiv").show();
+	$('html,body').animate({
+        scrollTop: $("#intro").height()
+      },
+      500,
+      function() {$("#intro").hide()});
+
+	
+}
+function joinus(){
+activite()
+ setTimeout(function(){
+ 
+ back()
+  	
+  },1000)
+}
+function back(){
+	
+	$("#intro").show();
+    $('html,body').animate({scrollTop: $("#intro").height()},0);
+	$('html,body').animate({
+        scrollTop: 0
+      },
+      500,
+      function() {$('#myiframe').attr('src',null);$('#myiframe').hide();$("#joinusdiv").hide();});
+
+	
+}
+function enterroom(){
+	
+	alert("请直接扫描二维码")
+	
+}
+function createroom(){
+  activite()
+  setTimeout(function(){
+  		$.get("/createroom", function(result){
+    if(platform.name=="Chrome"&&platform.version>"64")  $('#myiframe').attr('src',"/canvas?roomid="+result.roomid+"&token="+result.token);
+    else{location.href="/canvas?roomid="+result.roomid+"&token="+result.token;}
+  });
+  	
+  },2000)
+
+  
+}
+console.log('%c页面加载完毕消耗了'+Math.round(performance.now()*100)/100+'ms','background:#fff;color:#333;text-shadow:0 0 2px #eee,0 0 3px #eee,0 0 3px #eee,0 0 2px #eee,0 0 3px #eee;');
+console.log("%c [Made with 💙 by Wu_Eden」", "background:black; color:white; font-size:25px");
+  </script>
+ <script src="https://cdn.staticfile.org/platform/1.3.5/platform.min.js"></script>
+ <script>console.log(platform.name,platform.os,platform.product,platform.version)</script>
+ 
+</body>
+</html>

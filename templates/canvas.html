@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover,minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="author" content="Wu_Eden,349888274@qq.com">
+    <script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/jquery-confirm/3.3.4/jquery-confirm.min.css"/>
+   <script src="https://cdn.jsdelivr.net/npm/pixi.js-legacy@5.2.0/dist/pixi-legacy.min.js"></script>
+    <script src="https://cdn.staticfile.org/howler/2.1.2/howler.min.js"></script>
+    <script src="https://cdn.staticfile.org/platform/1.3.5/platform.min.js"></script>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1446008_uku6u75nrs9.css">
+       <script src="https://cdn.bootcss.com/limonte-sweetalert2/8.11.8/sweetalert2.min.js"></script>
+       
+    <link href="https://cdn.bootcss.com/limonte-sweetalert2/8.11.8/sweetalert2.min.css" rel="stylesheet">
+<style>
+.inverted {
+    filter: invert(100%);
+}
+/*! CSS Used from: https://cdn.staticfile.org/uikit/3.2.0/css/uikit.min.css */
+html{line-height:1.5;}
+canvas,iframe{vertical-align:middle;}
+*{padding: 0; margin: 0}
+p{text-shadow: 1px 1px 2px rgba(255,255,255,.7);}
+    .jconfirm-box {width:80vw;}
+    ::-webkit-scrollbar {display: none;}
+    .magicdiv:hover{opacity: 1;transition:  0.8s;}
+    .swal2-container {z-index: -1;}
+    .magicdiv{opacity: 0.6;transition: 0.8s;height:100vh;z-index: 2;/*background:#e4e2e2;*/
+    	    -webkit-overflow-scrolling: touch; 
+    overflow-y: scroll; overflow-x: hidden;
+    }
+     canvas {position:absolute;top:0;z-index: -1;}
+     #bg{width:100vw;height:100vh;position:absolute;top:0;z-index: -2;
+     	/* BACKGROUND-IMAGE: URL(https://cdn.idealbroker.cn/cx/images/bg1.jpg); */
+     	 background-size: cover;
+     }
+     #fullscreen-toggler:hover{opacity:1;transition: opacity 0.3s;}
+     #fullscreen-toggler{opacity:0.3;z-index:2;font-size:40px;position:fixed;top:-10px;right:2px;}
+     /* backdrop-filter: blur(50PX)  */
+     .numberplate{position:fixed;bottom:0;right:0;margin:5px;border-radius: 50%;height: 30px;width: 30px;display: inline-block; background: #238ff9;vertical-align: top;}
+</style>
+</head>
+
+<body>
+	<div id="bg"></div>
+	      	<p id="fpscontainer" style="position:fixed;top:0;left:0;margin:0;WIDTH: 100VW;BACKGROUND: chartreuse;TEXT-ALIGN: center;font-size: .7rem;">FPS:<span id="fps"></span></p>
+<!--banner start-->
+        <div style="width:100vw;bottom:0;height:40px;position:fixed;color:red;">
+        <!--	<h1 style="line-height:64px;display:inline;margin: 0;">111</h1>	<h1 style="line-height:64px;display:inline">111</h1>-->
+      <div id="tipscontainer"> <p id="tips" style="text-align:center;line-height:40PX;opacity:0.7">上划或点击此处呼出控制面板</p></div>
+	      	<script>
+	      	    var tipsarray=["上划可以呼出控制面板"," 「Made with 💙 by Wu_Eden」","Milky Way Barrage Founder Edition","银河弹幕创始人版本"]
+	      	    var tipnum=0;
+	      		setInterval(function(){if(tipnum==tipsarray.length-1)tipnum=-1;tipnum++;$("#tips").html(tipsarray[tipnum])},2000);
+	      	</script>
+        </div> 
+        <!--banner end-->
+	      	<span id="numberplatecontainer" class="numberplate">
+      <span id="selfindex" style="display: block;color: #FFFFFF;height: 30px;line-height: 30px;text-align: center">0</span>
+            </span>
+	      	
+      	    <script>setInterval(function(){fps.innerText=parseInt(app.ticker.FPS)},500)</script>
+	 <span onclick="fullScreen()" id="fullscreen-toggler" class="iconfont iconfullScreenEnter"></span>
+    <div id="mydiv" style="width:100vw;height:100vh;position:absolute;top:0;overflow:scroll;">
+    	<div id="transparentdiv">
+      <div style="height: 100vh"></div>
+            	<div onclick="raisepannel()" style="height:40px;width: 100vw;bottom: 0;height: 40px;position: fixed;"></div>
+        </div>
+      <div class="magicdiv">
+
+      <iframe width="100%" height='100%' frameborder='0' id='myiframe' scrolling="yes" src="/pannel"></iframe>
+
+        
+      </div>
+      <script>
+      function isapple(){
+	return platform.os["family"]=="iOS"//||"OS X"
+}
+
+      function getQueryVariable(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+}
+
+    function toast(msg, time, type) {
+    	time=time||1000;
+    	type=type||null;
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top',
+        animation: false,
+        showConfirmButton: false,
+        timer: 1000
+      });
+      Toast.fire({
+        title: msg,
+        timer: time,
+        type: type,
+      });
+    }
+    
+    
+var lastscroll = 0;
+var scrolltimer;
+var pannelraised=false;
+var scrolllistennerlock=false;
+function back(requielock){
+	if(isapple())$("#transparentdiv").show();
+	requielock=requielock||true;
+	if(requielock)scrolllistennerlock=true;
+	 $('#mydiv').animate({
+                scrollTop: 0
+            },
+            'fast',function(){scrolllistennerlock=false;});
+            $(".magicdiv").css("opacity", 0.7);
+            pannelraised=false;
+}
+function raisepannel(requielock){
+	requielock=requielock||true;
+	if(requielock)scrolllistennerlock=true;
+	 $('#mydiv').animate({
+                scrollTop: $('#mydiv').height()
+            },
+            'fast',function(){scrolllistennerlock=false;if(isapple())$("#transparentdiv").hide()});
+            $(".magicdiv").css("opacity", 1);
+            pannelraised=true;
+}
+
+	var ts;
+if(isapple()){
+
+	$(document).bind('touchstart', function (e){
+   ts = e.originalEvent.touches[0].clientY;
+	});
+
+	$(document).bind('touchend', function (e){
+   var te = e.originalEvent.changedTouches[0].clientY;
+   if(ts > te+5){
+   	if(scrolllistennerlock)return
+   	  raisepannel(true)
+   }
+	});
+	
+}
+
+else{	
+	$('#mydiv').on('scroll',function() {
+
+    if(scrolllistennerlock)return
+    clearTimeout(scrolltimer);
+    scrolltimer = setTimeout(function() {
+
+        cur_scrolltop = $('#mydiv').scrollTop();
+        t = cur_scrolltop - lastscroll;
+        if (t > 0) {
+            raisepannel(false)
+        } else {
+            back(false)
+        }
+        lastscroll = cur_scrolltop;
+    },
+    50);
+
+	});
+
+}
+
+
+
+      </script>
+    </div>
+
+
+    <script>
+
+      //全屏
+      function fullScreen() {
+
+        var element = document.documentElement; // 返回 html dom 中的root 节点 <html>
+        if (!$('body').hasClass('full-screen')) {
+        	$('body').addClass('full-screen');
+          $('#fullscreen-toggler').removeClass("iconfullScreenEnter").addClass('iconfullScreenExit');
+          // 判断浏览器设备类型
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.mozRequestFullScreen) { // 兼容火狐
+            element.mozRequestFullScreen();
+          } else if (element.webkitRequestFullscreen) { // 兼容谷歌
+            element.webkitRequestFullscreen();
+          } else if (element.msRequestFullscreen) { // 兼容IE
+            element.msRequestFullscreen();
+          }
+        } else { // 退出全屏
+        	$('body').removeClass('full-screen');
+        $('#fullscreen-toggler').removeClass("iconfullScreenExit").addClass('iconfullScreenEnter');
+          //  退出全屏
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        }
+
+      }
+
+      
+      var onresizetimer = false;
+      window.onresize = function() {
+        clearTimeout(onresizetimer);
+        onresizetimer = setTimeout(function() {
+        	
+        	
+        if(pannelraised) {
+        	scrolllistennerlock=true;
+        $('#mydiv').animate({scrollTop: $('#mydiv').height()},'fast',function(){setTimeout("scrolllistennerlock=false",500)});
+        }
+        
+        
+          console.log("窗口大小变化");
+          app.renderer.resize(document.documentElement.clientWidth, document.documentElement.clientHeight);
+          ws.send(JSON.stringify({"action": "reportscreenwidth","screenwidth": document.documentElement.clientWidth}));
+          ws.send(JSON.stringify({"action": "resync"}));
+        },
+        500);
+
+      }
+      </script>
+ 
+    <script>
+      var id = -1;var token,roomtoken=getQueryVariable("token"),roomid=getQueryVariable("roomid");
+      var timestamp_offset=0;
+      var start_timestamp=0;
+      function servertimestamp(){return window.performance.now()+timestamp_offset}
+      function ping() {
+        //pingtimer = setTimeout("ping()", isrendering() ? pinginterval: pinginterval_idle);
+        pingtimer = setTimeout("ping()",  pinginterval);
+        if (id == -1||danmutext.x==null) return;
+        var data = {
+          "action": "statusreport",
+         // "id": id,
+          "fps": app.ticker.FPS,
+          "current": danmutext.x,
+         // "timestamp":window.performance.now()+timestamp_offset
+          //  "screenwidth":danmu.width,
+          //  "textwidth":textwidth,
+          //  "percent":(app.renderer.width-danmutext.x)*100/textwidth,
+         // "pinginterval": isrendering() ? pinginterval: pinginterval_idle,
+         // "isrendering": isrendering(),
+        //  "soundduration":sound.playing()?sound_duration:-1,
+        //  "soundpos":sound.playing()?sound.seek():-1,
+
+        }
+        ws.send(JSON.stringify(data));
+        console.log(data);
+      }
+
+      var ws = new ReconnectingWebSocket("wss://"+window.location.host+"/ws");
+      //连接发生错误的回调方法
+      ws.onerror = function() {
+        console.log("长连接出错");
+        clearTimeout(pingtimer);
+        if ($("#lscon").length == 0)
+       { Swal.fire({
+							type: 'error',
+							title: 'Oops...连接断开了',
+							text: '正在尝试重连',
+                            footer:  '<span id="lscon" href="/">ABCDEFG</span>',
+							showConfirmButton: false,
+							allowOutsideClick: false,
+						});
+                     	$("canvas").css("filter","blur(20px)");
+                     	danmutext.text="lost connection";danmutext.style.fontSize=document.documentElement.clientHeight*0.7;rightwidth=0;leftwidth=danmutext.width;
+       }
+      };
+      var pingtimer;
+      var pinginterval = 500;
+      var pinginterval_idle = 2000;
+      //连接成功建立的回调方法
+      ws.onopen = function(event) {
+        console.log("长连接成功建立");
+        ws.send(JSON.stringify({"action": "init","roomid": roomid,"roomtoken": roomtoken,"ua": navigator.userAgent,"screenwidth": app.renderer.width}));
+        clearTimeout(pingtimer);
+        pingtimer = setTimeout("ping()", pinginterval);
+        Swal.close();
+        $("canvas").css("filter","none");
+      }
+      var network_latency=0;var lastsetpos=0;
+      var last_ping_timestamp=window.performance.now();
+      //接收到消息的回调方法
+      ws.onmessage = function(event) {
+        console.log("接收到消息: ", event.data);
+        data = JSON.parse(event.data);
+        switch (data.action) {
+        case "forcequit":
+          alert("服务端强制关闭了你的连接");
+          document.getElementById("myiframe").contentWindow.back();
+          break;
+        case "updatepannelui":
+          document.getElementById('myiframe').contentWindow.refreshui();
+          break;	
+        case "settext":
+          danmutext.text=data.text;
+          danmutext.style.fontSize = data.size;
+          textwidth=danmutext.width;
+          ws.send(JSON.stringify({"action": "reporttextwidth","textwidth":textwidth}));
+          break;
+        case "setspeed":
+          speed = data.speed;
+          break;
+        case "ping":
+          ws.send(JSON.stringify({"action": "pong","timestamp":servertimestamp()}));
+          var now=window.performance.now();
+          network_latency=Math.abs(now-last_ping_timestamp-500);
+          last_ping_timestamp=now;
+          if(network_latency>100)toast("网络抖动明显("+network_latency+"ms)",500,null);
+          console.log("网络抖动:",network_latency);
+          break;
+        case "setid":
+          id = data.id;
+          token=data.token;
+          break;
+        case "settimestampoffset":  
+          timestamp_offset+=data.offset
+          break;	
+        case "stop":
+          danmutext.x = -textwidth;
+          break;
+        case "startfromright":
+          danmutext.x = danmu.width;
+          break;
+        case "startfromleft":
+          danmutext.x = 0;
+          break;
+        case "tofrontpercent":
+          danmutext.x = -(data.percent * textwidth / 100);
+          console.log(danmutext.x, danmutext.text, textwidth);
+          break;
+        case "toendpercent":
+          danmutext.x = danmu.width - (data.percent * textwidth / 100);
+          console.log(danmutext.x, danmutext.text, textwidth);
+          break;
+        case "setpos":
+        	if(lastsetpos>data.timestamp)break;
+        	lastsetpos=data.timestamp;
+          danmutext.x = data.px;
+          towards = data.towards == "left" ? -1 : 1;
+          console.log(danmutext.x, danmutext.text, textwidth);
+          break;
+        case "toendpx":
+          danmutext.x = document.documentElement.clientWidth - data.px;
+          console.log(danmutext.x, danmutext.text, textwidth);
+          break;
+        case "forceresync":
+          sendresync(false);
+          break;
+        case "resync"://服务端检测到不同步触发
+        if(document.getElementById('myiframe').contentWindow.vue.allowresync) sendresync(false);
+          break;  
+        case "resyncmusic":
+          ws.send(JSON.stringify({"action":"syncmusic"}));
+          break;
+        case "setmusicpos":
+        	sound.stop();sound.seek((data.pos/1000)%sound_duration);sound.play();
+          break;  
+        case "settextcolor":
+        	danmutext.style.fill = data.color;
+          break;        
+        case "setcycledata":
+        	rightwidth=data.data[1];
+        	leftwidth=data.data[0];
+          break;  
+        case "setbackgroundcolor":
+        	$('#bg').css('background',data.color);
+          break;       
+        case "showmsg":
+        	toast(data.msg);
+          break;  
+        case "setindex":
+        	$("#selfindex").html(data.index);
+          break;    
+        case "setstarttimestamp":
+        	start_timestamp=data.timestamp;
+          break;  
+        case "setbgblinkinterval":
+        	bgblinkinterval=data.interval;
+        	break;
+        }
+
+      }
+
+
+      //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+      window.onbeforeunload = function() {
+        ws.close();
+      }
+      
+
+      </script>
+      
+
+<script>
+    var app = new PIXI.Application({
+    width: document.documentElement.clientWidth, 
+    height: document.documentElement.clientHeight, 
+    antialias: false,    // default: false
+    transparent: true, // default: false
+    resolution: 1,      // default: 1
+    autoDensity:true,
+    forceCanvas: true
+    });
+app.renderer.view.style.position = "absolute";
+app.renderer.view.style.display = "block";
+
+    // 将canvas添加到页面中
+    document.body.appendChild(app.view);
+ 
+    const style = new PIXI.TextStyle({
+    fontFamily: 'Arial',
+    fontSize: 400,
+    fontWeight: 'bold',
+    fill: '#F7EDCA',
+	stroke: '#4a1850',
+	strokeThickness: 5,
+	dropShadow: true,
+	dropShadowColor: '#000000',
+    dropShadowBlur: 4,
+    dropShadowAngle: Math.PI / 6,
+    dropShadowDistance: 6,
+});
+    var danmutext = new PIXI.Text('',style);
+ 
+    // 设置精灵中心位置
+    //danmutext.anchor.set(0.5);
+ 
+    // 设置精灵在x轴/y轴的位置
+    danmutext.x = document.documentElement.clientWidth*2;
+
+     var speed = 3,towards = 1,textwidth,rightwidth,leftwidth;
+
+    // 将精灵添加到舞台
+    app.stage.addChild(danmutext);
+ 
+
+  function isrendering() {
+        return danmutext.x > -textwidth && danmutext.x < app.renderer.width
+      }
+
+  var sentresync;
+function sendresync(throttle){
+	var now=window.performance.now();
+	if(throttle&&now-sentresync<1000)return;
+	if(throttle)sentresync = now;
+	try {ws.send(JSON.stringify({"action":"resync"}));}
+	catch(e){console.log("ws error");danmutext.x = towards<0?-danmutext.width:app.renderer.width;towards=-towards;}
+	console.log("内部翻转");
+	
+}
+      
+var last =0;
+var lastrender;
+function render() {
+
+       
+       
+
+
+       var now = window.performance.now(); 
+       
+        
+        if(danmutext.x>rightwidth+app.renderer.width||danmutext.x<-leftwidth){console.log("onecycle");sendresync(true);}	
+        // danmutext.x =danmutext_x;
+       // danmutext.y =danmutext_y; 
+       var delta=(now-lastrender)/(1000/60);
+
+       danmutext.x +=speed*towards*(delta);
+       danmutext.y = (app.renderer.height-danmutext.height)/2;
+       
+       lastrender=window.performance.now(); 
+
+        
+        requestAnimationFrame(render);
+         
+        bkblink(); 
+      
+      }
+
+      render();
+
+
+var bgblinkinterval=0;
+var bgblinkcount=0;
+function bkblink(){
+	if(bgblinkinterval==0)return;
+	var t=servertimestamp()-start_timestamp;
+	var roundcount=parseInt(t/bgblinkinterval);
+	//console.log(t);
+    if(bgblinkcount!=roundcount&&(t%bgblinkinterval)<(1000/app.ticker.FPS)*5) {
+        if(roundcount%2==0)$("#bg").addClass("inverted");
+        else{$("#bg").removeClass("inverted");}
+        bgblinkcount=roundcount;
+    	
+    }
+    
+    
+}
+</script>
+<script>
+
+   function getls(key){
+   	temp=localStorage.getItem(key)||"shown";
+   	return temp=="hidden";
+   }   
+   if(getls("fps"))$("#fpscontainer").hide();
+   if(getls("tips"))$("#tipscontainer").hide();
+   if(getls("numberplate")) $("#numberplatecontainer").hide();
+   if(getls("fullscreen-toggler")) $("#fullscreen-toggler").hide();
+/*
+
+var sound = new Howl({src: ['/1.mp3']});
+
+
+sound.once('load', function(){
+  console.log("audio file loaded",sound.duration());
+  //sound.play();
+  window.sound_duration=sound.duration();
+  ws.send(JSON.stringify({"action": "syncmusic"}));
+});
+
+// Fires when the sound finishes playing.
+sound.on('end', function(){
+  console.log('audio file ended!');
+  ws.send(JSON.stringify({"action": "syncmusic"}));
+});
+
+*/
+
+
+</script>
+</body>
+</html>
